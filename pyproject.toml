@@ -1,0 +1,36 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "byu-robomanip"
+version = "0.1.0"
+description = "Teaching tools for BYU robot manipulator kinematics and dynamics"
+requires-python = ">=3.10"
+dependencies = [
+    "ipykernel>=6.29",
+    "ipython>=8.12",
+    "matplotlib>=3.7",
+    "numpy>=1.24",
+    "PyOpenGL>=3.1.7",
+    "pyqtgraph>=0.14,<0.15",
+    "PySide6>=6.5",
+    "scipy>=1.10",
+    "sympy>=1.12",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8",
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = ["--basetemp=../.byu-robotics-pytest"]
+markers = [
+    "slow: computationally intensive symbolic regression checks",
+]
+
