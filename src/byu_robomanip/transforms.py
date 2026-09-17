@@ -18,10 +18,9 @@ def rot2(theta: float) -> NDArray:
     :param float theta: angle of rotation (rad)
     :return R: 2x2 numpy array representing rotation in 2D by theta
     """
-    # TODO: Implement the 2D SO(2) rotation matrix.
-    # HW02 student task
-
-    raise NotImplementedError("Complete rot2 for HW02")
+    c, s = np.cos(theta), np.sin(theta)
+    return np.array([[c, -s], 
+                     [s, c]])
 
 
 ## 3D Rotations
@@ -32,10 +31,10 @@ def rotx(theta: float) -> NDArray:
     :param float theta: angle of rotation (rad)
     :return R: 3x3 numpy array representing rotation about x-axis by amount theta
     """
-    # TODO: Implement the 3D rotation matrix about the x-axis.
-    # HW02 student task
-
-    raise NotImplementedError("Complete rotx for HW02")
+    c, s = np.cos(theta), np.sin(theta)
+    return np.array([[1, 0, 0],
+                    [0, c, -s],
+                    [0, s, c]])
 
 
 def roty(theta: float) -> NDArray:
@@ -45,10 +44,10 @@ def roty(theta: float) -> NDArray:
     :param float theta: angle of rotation (rad)
     :return R: 3x3 numpy array representing rotation about y-axis by amount theta
     """
-    # TODO: Implement the 3D rotation matrix about the y-axis.
-    # HW02 student task
-
-    raise NotImplementedError("Complete roty for HW02")
+    c, s = np.cos(theta), np.sin(theta)
+    return np.array([[c, 0, s],
+                    [0, 1, 0],
+                    [-s, 0, c]])
 
 
 def rotz(theta: float) -> NDArray:
@@ -58,10 +57,10 @@ def rotz(theta: float) -> NDArray:
     :param float theta: angle of rotation (rad)
     :return R: 3x3 numpy array representing rotation about z-axis by amount theta
     """
-    # TODO: Implement the 3D rotation matrix about the z-axis.
-    # HW02 student task
-
-    raise NotImplementedError("Complete rotz for HW02")
+    c, s = np.cos(theta), np.sin(theta)
+    return np.array([[c, -s, 0],
+                    [s, c, 0],
+                    [0, 0, 1]])
 
 
 # inverse of rotation matrix
@@ -72,10 +71,8 @@ def rot_inv(R: NDArray) -> NDArray:
     :param NDArray R: 2x2 or 3x3 numpy array representing a proper rotation matrix
     :return R_inv: 2x2 or 3x3 inverse of the input rotation matrix
     """
-    # TODO: Implement matrix inversion for SO(2) and SO(3).
-    # HW02 student task
-
-    raise NotImplementedError("Complete rot_inv for HW02")
+    # I think you told us to do it another way but ¯\_(ツ)_/¯
+    return np.linalg.inv(R)
 
 
 def se3(R: NDArray = np.eye(3), p: NDArray = np.zeros(3)) -> NDArray:
