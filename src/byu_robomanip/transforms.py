@@ -89,6 +89,7 @@ def se3(R: NDArray = np.eye(3), p: NDArray = np.zeros(3)) -> NDArray:
 
     # TODO: Construct a 4x4 homogeneous transform from a rotation matrix and translation vector.
     # HW03 student task
+    
 
     raise NotImplementedError("Complete se3 for HW03")
 
