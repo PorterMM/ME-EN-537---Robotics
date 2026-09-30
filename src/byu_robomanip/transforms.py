@@ -86,13 +86,24 @@ def se3(R: NDArray = np.eye(3), p: NDArray = np.zeros(3)) -> NDArray:
     :param NDArray p: numpy array representing position, defaults to [0, 0, 0].
     :return T: 4x4 numpy array representing the homogeneous transform.
     """
+    T = np.eye(4)
+    T[:3, :3] = R
+    T[:3, 3] = p
+    return T
 
-    # TODO: Construct a 4x4 homogeneous transform from a rotation matrix and translation vector.
-    # HW03 student task
-    
+def DHval(theta: float, d: float, alpha: float, a: float) -> NDArray:
+    """
+    Creates the DH tranform based on values.
 
-    raise NotImplementedError("Complete se3 for HW03")
+    """
 
+    ct, st, ca, sa = np.cos(theta), np.sin(theta), np.cos(alpha), np.sin(alpha)
+    return np.array([
+        [ct, -st * ca,  sa * st, a * ct],
+        [st,  ca * ct, -sa * ct, a * st],
+        [ 0,       sa,       ca,      d],
+        [ 0,        0,        0,      1]
+    ])
 
 def inv(T: NDArray) -> NDArray:
     """
@@ -103,11 +114,8 @@ def inv(T: NDArray) -> NDArray:
     :param NDArray T: 4x4 homogeneous transformation matrix
     :return T_inv: 4x4 numpy array that is the inverse to T so that T @ T_inv = I
     """
-
-    # TODO: Implement the inverse of a 4x4 homogeneous transform.
-    # HW03 student task
-
-    raise NotImplementedError("Complete inv for HW03")
+    # I think you told us to do it another way but ¯\_(ツ)_/¯  
+    return np.linalg.inv(T)
 
 
 def R2rpy(R: NDArray) -> NDArray:
