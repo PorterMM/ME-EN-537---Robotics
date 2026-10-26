@@ -15,6 +15,7 @@ import numpy as np
 from numpy.typing import NDArray
 from typing import Callable, Iterable
 from byu_robomanip.utility import skew
+from byu_robomanip.transforms import DHval
 
 
 # this is a convenience function that makes it easy to define a function that calculates
@@ -46,7 +47,8 @@ def dh2A(dh: list[float], jt: str) -> Callable[[float], NDArray]:
             # start by assigning the DH parameters to be readable
             # notice that in the case of a revolute joint, q is added to the fixed "theta" offset (if there is one)
             # HW04 student task
-            raise NotImplementedError("Complete dh2A for HW04")
+            theta, d, a, alpha = dh
+            return DHval(theta + q, d, alpha, a)
 
     # if joint is prismatic implement correct equations here:
     else:
@@ -59,7 +61,10 @@ def dh2A(dh: list[float], jt: str) -> Callable[[float], NDArray]:
 
             # notice that in the case of a prismatic joint, q is added to the fixed "d" parameter
             # HW04 student task
-            raise NotImplementedError("Complete dh2A for HW04")
+            if jt != "p":
+                raise ValueError("Joint type must be 'r' or 'p'")
+            theta, d, a, alpha = dh
+            return DHval(theta, d + q, alpha, a)
 
     return A
 
@@ -119,9 +124,7 @@ class SerialArm:
 
             # HW04 student task
 
-            raise NotImplementedError(
-                "Complete DH transform construction in SerialArm.__init__ for HW04"
-            )
+            self.transforms.append(dh2A(self.dh[i], self.jt[i]))
 
         # assigning the base, and tip transforms that will be added to the default DH transformations.
         self.base = base.copy()
@@ -189,12 +192,11 @@ class SerialArm:
         # the following lines of code are data type and error checking. You don't need to understand
         # all of it, but it is helpful to keep.
 
-        if not hasattr(q, "__getitem__"):
-            q = [q]
+        q = np.asarray([q] if np.isscalar(q) else list(q), dtype=float).reshape(-1)
 
         assert len(q) == self.n, "q must be the same size as the number of links!"
 
-        if isinstance(index, int):
+        if isinstance(index, (int, np.integer)):
             start_frame = 0
             end_frame = index
         elif hasattr(index, "__getitem__"):
@@ -218,7 +220,12 @@ class SerialArm:
 
         # HW04 student task
 
-        raise NotImplementedError("Complete SerialArm.fk for HW04")
+        T = self.base.copy() if base and start_frame == 0 else np.eye(4)
+        for i in range(start_frame, end_frame):
+            T = T @ self.transforms[i](q[i])
+        if tip and end_frame == self.n:
+            T = T @ self.tip
+        return T
 
     def jacob(
         self,
@@ -247,7 +254,20 @@ class SerialArm:
         # we are calculating the Jacobian in the base frame.
         # HW05 student task
 
-        raise NotImplementedError("Complete SerialArm.jacob for HW05")
+        q = np.asarray(q, dtype=float).reshape(-1)
+        assert q.size == self.n, "q must be the same size as the number of links!"
+        position = self.fk(q, index=index, base=base, tip=tip)[:3, 3]
+        T = self.base.copy() if base else np.eye(4)
+        J = np.zeros((6, self.n))
+        for i in range(index):
+            axis = T[:3, 2]
+            if self.jt[i] == "r":
+                J[:3, i] = np.cross(axis, position - T[:3, 3])
+                J[3:, i] = axis
+            else:
+                J[:3, i] = axis
+            T = T @ self.transforms[i](q[i])
+        return J
 
     def ik_position(
         self,
@@ -298,12 +318,10 @@ class SerialArm:
         ###############################################################################################
         # the following lines of code are data type and error checking. You don't need to understand
         # all of it, but it is helpful to keep.
-        if isinstance(q0, np.ndarray):
-            q = q0
-        elif q0 == None:
-            q = np.array([0.0] * self.n)
-        else:
-            q = np.array(q0)
+        q = np.zeros(self.n) if q0 is None else np.array(q0, dtype=float, copy=True).reshape(-1)
+        target = np.asarray(target, dtype=float).reshape(3)
+        if q.size != self.n or not np.all(np.isfinite(q)) or not np.all(np.isfinite(target)):
+            raise ValueError("Joint values and target must have valid sizes and finite values")
 
         # Try basic check for if the target is in the workspace.
         # Maximum length of the arm is sum(sqrt(d_i^2 + a_i^2)), distance to target is norm(A_t)
@@ -344,7 +362,52 @@ class SerialArm:
 
         # HW06 student task
 
-        raise NotImplementedError("Complete SerialArm.ik_position for HW06")
+        if method not in ("J_T", "pinv"):
+            raise ValueError("Method must be 'J_T' or 'pinv'")
+        if K.shape != (3, 3) or not np.all(np.isfinite(K)):
+            raise ValueError("Gain matrix must be a finite 3x3 array")
+        if not np.allclose(K, K.T) or np.any(np.linalg.eigvalsh(K) <= 0.0):
+            raise ValueError("Gain matrix must be symmetric positive definite")
+        if not np.isfinite(tol) or tol < 0 or not np.isfinite(kd) or kd < 0:
+            raise ValueError("Tolerance and damping must be finite and nonnegative")
+        if not isinstance(max_iter, (int, np.integer)) or max_iter < 0:
+            raise ValueError("Maximum iterations must be a nonnegative integer")
+
+        if debug:
+            import matplotlib.pyplot as plt
+
+            figure = plt.figure()
+            axes = figure.add_subplot(111, projection="3d")
+
+            def draw():
+                points = np.array([self.fk(q, index=i)[:3, 3] for i in range(self.n + 1)])
+                axes.clear()
+                axes.plot(*points.T, "o-")
+                axes.scatter(*target, color="red")
+                axes.set_title(f"Iteration {iters}, error {np.linalg.norm(error):.4g}")
+                figure.canvas.draw_idle()
+                plt.pause(0.001)
+                if debug_step:
+                    plt.waitforbuttonpress()
+
+        error = target - self.fk(q)[:3, 3]
+        iters = 0
+        if debug:
+            draw()
+        while np.linalg.norm(error) > tol and iters < max_iter:
+            J = self.jacob(q)[:3]
+            if method == "J_T":
+                step = J.T @ (K @ error)
+            elif kd == 0.0:
+                step = np.linalg.pinv(J) @ (K @ error)
+            else:
+                step = J.T @ np.linalg.solve(J @ J.T + kd**2 * np.eye(3), K @ error)
+            q = q + step
+            error = target - self.fk(q)[:3, 3]
+            iters += 1
+            if debug:
+                draw()
+        return q, error, iters, bool(np.linalg.norm(error) <= tol)
 
     def Z_shift(
         self,

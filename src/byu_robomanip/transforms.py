@@ -131,7 +131,16 @@ def R2rpy(R: NDArray) -> NDArray:
     # TODO: Implement conversion from a rotation matrix to roll-pitch-yaw angles.
     # HW04 student task
 
-    raise NotImplementedError("Complete R2rpy for HW04")
+    R = np.asarray(R, dtype=float)
+    horizontal = np.hypot(R[0, 0], R[1, 0])
+    pitch = np.arctan2(-R[2, 0], horizontal)
+    if horizontal > 1e-12:
+        roll = np.arctan2(R[2, 1], R[2, 2])
+        yaw = np.arctan2(R[1, 0], R[0, 0])
+    else:
+        roll = np.arctan2(-R[1, 2], R[1, 1])
+        yaw = 0.0
+    return np.array([roll, pitch, yaw])
 
 
 def R2axis(R: NDArray) -> NDArray:
@@ -150,7 +159,12 @@ def R2axis(R: NDArray) -> NDArray:
     # TODO: Implement conversion from a rotation matrix to axis-angle form.
     # HW04 student task
 
-    raise NotImplementedError("Complete R2axis for HW04")
+    q = R2quat(R)
+    length = np.linalg.norm(q[1:])
+    if length == 0.0:
+        return np.array([0.0, 1.0, 0.0, 0.0])
+    angle = 2.0 * np.arctan2(length, q[0])
+    return np.concatenate(([angle], q[1:] / length))
 
 
 def axis2R(angle: float, axis: NDArray) -> NDArray:
@@ -169,7 +183,17 @@ def axis2R(angle: float, axis: NDArray) -> NDArray:
     # TODO: Implement conversion from axis-angle form to a rotation matrix.
     # HW04 student task
 
-    raise NotImplementedError("Complete axis2R for HW04")
+    axis = np.asarray(axis, dtype=float).reshape(3)
+    length = np.linalg.norm(axis)
+    if not np.isfinite(angle) or not np.all(np.isfinite(axis)):
+        raise ValueError("Angle and axis must be finite")
+    if length == 0.0:
+        if angle == 0.0:
+            return np.eye(3)
+        raise ValueError("Rotation axis must be nonzero")
+    x, y, z = axis / length
+    S = np.array([[0.0, -z, y], [z, 0.0, -x], [-y, x, 0.0]])
+    return np.eye(3) + np.sin(angle) * S + (1.0 - np.cos(angle)) * (S @ S)
 
 
 def R2quat(R: NDArray) -> NDArray:
@@ -186,7 +210,27 @@ def R2quat(R: NDArray) -> NDArray:
     # TODO: Implement conversion from a rotation matrix to quaternion form.
     # HW04 student task
 
-    raise NotImplementedError("Complete R2quat for HW04")
+    R = np.asarray(R, dtype=float)
+    trace = np.trace(R)
+    if trace > 0.0:
+        s = 2.0 * np.sqrt(1.0 + trace)
+        q = np.array([
+            0.25 * s,
+            (R[2, 1] - R[1, 2]) / s,
+            (R[0, 2] - R[2, 0]) / s,
+            (R[1, 0] - R[0, 1]) / s,
+        ])
+    else:
+        i = int(np.argmax(np.diag(R)))
+        j, k = (i + 1) % 3, (i + 2) % 3
+        s = 2.0 * np.sqrt(max(0.0, 1.0 + R[i, i] - R[j, j] - R[k, k]))
+        q = np.empty(4)
+        q[0] = (R[k, j] - R[j, k]) / s
+        q[i + 1] = 0.25 * s
+        q[j + 1] = (R[j, i] + R[i, j]) / s
+        q[k + 1] = (R[k, i] + R[i, k]) / s
+    q /= np.linalg.norm(q)
+    return -q if q[0] < 0.0 else q
 
 
 def quat2R(q: NDArray) -> NDArray:
@@ -202,7 +246,16 @@ def quat2R(q: NDArray) -> NDArray:
     # TODO: Implement conversion from quaternion form to a rotation matrix.
     # HW04 student task
 
-    raise NotImplementedError("Complete quat2R for HW04")
+    q = np.asarray(q, dtype=float).reshape(4)
+    if not np.all(np.isfinite(q)) or not np.any(q):
+        raise ValueError("Quaternion must be finite and nonzero")
+    q = q / np.max(np.abs(q))
+    w, x, y, z = q / np.linalg.norm(q)
+    return np.array([
+        [1 - 2 * (y*y + z*z), 2 * (x*y - w*z), 2 * (x*z + w*y)],
+        [2 * (x*y + w*z), 1 - 2 * (x*x + z*z), 2 * (y*z - w*x)],
+        [2 * (x*z - w*y), 2 * (y*z + w*x), 1 - 2 * (x*x + y*y)],
+    ])
 
 
 def euler2R(th1: float, th2: float, th3: float, order: str = "xyz") -> NDArray:
@@ -223,4 +276,12 @@ def euler2R(th1: float, th2: float, th3: float, order: str = "xyz") -> NDArray:
     # TODO: Implement conversion from Euler angles to a rotation matrix.
     # HW04 student task
 
-    raise NotImplementedError("Complete euler2R for HW04")
+    if (not isinstance(order, str) or len(order) != 3
+            or any(axis not in "xyz" for axis in order)
+            or order[0] == order[1] or order[1] == order[2]):
+        raise ValueError("Order must be one of the 12 intrinsic Euler sequences")
+    rotations = {"x": rotx, "y": roty, "z": rotz}
+    R = np.eye(3)
+    for axis, angle in zip(order, (th1, th2, th3)):
+        R = R @ rotations[axis](angle)
+    return R
