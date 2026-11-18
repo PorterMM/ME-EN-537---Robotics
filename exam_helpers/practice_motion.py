@@ -15,7 +15,7 @@ from pathlib import Path
 
 import numpy as np
 
-PRACTICE_NOTE = "Change this text to describe your OS practice check."
+PRACTICE_NOTE = "a small comment"
 DEMO_ID = "two_link_fixed_motion_v1"
 DH = [[0, 0, 1.0, 0], [0, 0, 0.75, 0]]
 FPS = 20

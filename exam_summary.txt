@@ -1,0 +1,87 @@
+ME 537 PRACTICE CHECK
+
+RESULT: PASS - your library export was created and tested.
+
+Checks completed:
+  PASS: Found your homework library in src/byu_robomanip.
+  PASS: Loaded the library from this repository.
+  PASS: Forward kinematics returned a finite 4-by-4 transform.
+  PASS: The two-link Jacobian returned a finite 6-by-2 matrix.
+  PASS: The exported library ran in a fresh Python process.
+
+Python: 3.11.1 | OS: Windows | CPU: AMD64
+ZIP: exam.zip
+Detailed report inside the ZIP: practice_report.json
+
+Included animation report: completed
+Included recorder session: finished
+This export command does not rerun the animation or verify recorder completeness.
+Final recording / exported source comparison: MATCH
+Next: upload exam.zip on Learning Suite. This upload is required to receive a score and grade for Part 2. The session log is included automatically; you do not need to inspect it.
+
+This is a setup and packaging check, not a grade or a check of numerical accuracy.
+
+Files included in the ZIP (63):
+  check_environment.py
+  exam_helpers/practice_motion.py
+  exam_session/events.jsonl
+  exam_session/session.json
+  exam_session/snapshots/d082b5c2-0f01-4d94-a857-af813d05c44e-0000002.json
+  exam_session/snapshots/d082b5c2-0f01-4d94-a857-af813d05c44e-0000041.json
+  exam_session/snapshots/d082b5c2-0f01-4d94-a857-af813d05c44e-0000052.json
+  exam_session/snapshots/d082b5c2-0f01-4d94-a857-af813d05c44e-0000064.json
+  exam_session/snapshots/d082b5c2-0f01-4d94-a857-af813d05c44e-0000076.json
+  exam_session/snapshots/d082b5c2-0f01-4d94-a857-af813d05c44e-0000089.json
+  exam_session/snapshots/d082b5c2-0f01-4d94-a857-af813d05c44e-0000105.json
+  exam_session/snapshots/d082b5c2-0f01-4d94-a857-af813d05c44e-0000117.json
+  exam_session/snapshots/d082b5c2-0f01-4d94-a857-af813d05c44e-0000131.json
+  exam_session/snapshots/d082b5c2-0f01-4d94-a857-af813d05c44e-0000148.json
+  exam_session/snapshots/d082b5c2-0f01-4d94-a857-af813d05c44e-0000163.json
+  exam_session/snapshots/d082b5c2-0f01-4d94-a857-af813d05c44e-0000178.json
+  exam_session/snapshots/d082b5c2-0f01-4d94-a857-af813d05c44e-0000193.json
+  exam_session/snapshots/d082b5c2-0f01-4d94-a857-af813d05c44e-0000206.json
+  exam_session/snapshots/d082b5c2-0f01-4d94-a857-af813d05c44e-0000218.json
+  exam_session/snapshots/d082b5c2-0f01-4d94-a857-af813d05c44e-0000231.json
+  exam_session/snapshots/d082b5c2-0f01-4d94-a857-af813d05c44e-0000242.json
+  exam_session/snapshots/d082b5c2-0f01-4d94-a857-af813d05c44e-0000254.json
+  exam_session/snapshots/d082b5c2-0f01-4d94-a857-af813d05c44e-0000266.json
+  exam_session/snapshots/d082b5c2-0f01-4d94-a857-af813d05c44e-0000278.json
+  exam_session/snapshots/d082b5c2-0f01-4d94-a857-af813d05c44e-0000292.json
+  exam_session/snapshots/d082b5c2-0f01-4d94-a857-af813d05c44e-0000303.json
+  exam_session/snapshots/d082b5c2-0f01-4d94-a857-af813d05c44e-0000314.json
+  exam_session/snapshots/d082b5c2-0f01-4d94-a857-af813d05c44e-0000326.json
+  exam_session/snapshots/d082b5c2-0f01-4d94-a857-af813d05c44e-0000337.json
+  exam_session/snapshots/d082b5c2-0f01-4d94-a857-af813d05c44e-0000348.json
+  exam_session/snapshots/d082b5c2-0f01-4d94-a857-af813d05c44e-0000356.json
+  exam_session/snapshots/d082b5c2-0f01-4d94-a857-af813d05c44e-0000370.json
+  exam_session/snapshots/d082b5c2-0f01-4d94-a857-af813d05c44e-0000382.json
+  exam_session/snapshots/d082b5c2-0f01-4d94-a857-af813d05c44e-0000401.json
+  exam_session/snapshots/d082b5c2-0f01-4d94-a857-af813d05c44e-0000417.json
+  exam_session/snapshots/d082b5c2-0f01-4d94-a857-af813d05c44e-0000430.json
+  exam_session/snapshots/d082b5c2-0f01-4d94-a857-af813d05c44e-0000441.json
+  exam_session/snapshots/d082b5c2-0f01-4d94-a857-af813d05c44e-0000452.json
+  exam_session/snapshots/d082b5c2-0f01-4d94-a857-af813d05c44e-0000465.json
+  exam_session/snapshots/d082b5c2-0f01-4d94-a857-af813d05c44e-0000478.json
+  exam_session/snapshots/d082b5c2-0f01-4d94-a857-af813d05c44e-0000489.json
+  exam_session/snapshots/d082b5c2-0f01-4d94-a857-af813d05c44e-0000500.json
+  exam_session/snapshots/d082b5c2-0f01-4d94-a857-af813d05c44e-0000513.json
+  exam_session/snapshots/d082b5c2-0f01-4d94-a857-af813d05c44e-0000528.json
+  exam_session/snapshots/d082b5c2-0f01-4d94-a857-af813d05c44e-0000531.json
+  practice_manifest.json
+  practice_motion/joint_angles.csv
+  practice_motion/practice_report.json
+  practice_motion/preview.png
+  practice_motion/trajectory.npy
+  practice_report.json
+  practice_summary.txt
+  recording_integrity.json
+  recording_integrity.py
+  src/byu_robomanip/__init__.py
+  src/byu_robomanip/dynamics.py
+  src/byu_robomanip/kinematics.py
+  src/byu_robomanip/symbolic/__init__.py
+  src/byu_robomanip/symbolic/dynamics.py
+  src/byu_robomanip/symbolic/kinematics.py
+  src/byu_robomanip/transforms.py
+  src/byu_robomanip/utility.py
+  src/byu_robomanip/visualization.py

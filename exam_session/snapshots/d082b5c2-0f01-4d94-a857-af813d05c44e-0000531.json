@@ -1,0 +1,19 @@
+{
+  "reason": "finished",
+  "utc": "2026-10-27T05:41:31.137Z",
+  "files": {},
+  "final_hash_scope": 1,
+  "source_snapshot_scope": 2,
+  "final_file_sha256": {
+    "src/byu_robomanip/dynamics.py": "39342168b11beb8aa18605e4b7ab2d44ad19e292664f18d1d6e1a9e4c525bdd7",
+    "src/byu_robomanip/kinematics.py": "f68a665ea6059c1ac69f56dc3ac06ad91f5dbf9a3d6427d73e0114064eb5115e",
+    "src/byu_robomanip/symbolic/dynamics.py": "a98e993c2b778f7a6dc456e55215b22fef2d70971881592752a014ed64dcf857",
+    "src/byu_robomanip/symbolic/kinematics.py": "06fa773aaa8d33ddac9e4b35e014e7ae94dcdf54e3a2bed3ffb0e0bbf9756db9",
+    "src/byu_robomanip/symbolic/__init__.py": "926c63ad140321906a6d30dfaf07df0e008ddd584ce24ab530cad324af72f042",
+    "src/byu_robomanip/transforms.py": "52472617a5a7c172af7308b352654d0f69a0bb6bd47269a893098e5c2afa5dbe",
+    "src/byu_robomanip/utility.py": "2233e654732c25cc6b36cd6819803b0688f40c2088cded141dbeb83ba1d838f8",
+    "src/byu_robomanip/visualization.py": "50b9dd5c6f524bd12f0a7114893d6a581f2c54fdef4e5326611de571a0a65829",
+    "src/byu_robomanip/__init__.py": "77eb7a58e9684f1931cb50e2b23b3dda6b654a781762ad88f4c3bf04b8d8fa43",
+    "exam_helpers/practice_motion.py": "dd6177aef4f336c16d41727392bef91dbfb88c77dbf01c576cbd9ca271bb3fbd"
+  }
+}

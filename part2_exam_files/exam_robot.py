@@ -3,10 +3,14 @@
 import numpy as np
 from byu_robomanip import kinematics as kin
 
-# TODO: enter YOUR DH table from the exam drawing, one row per joint.
 # Each row is [theta offset, d, a, alpha], in radians and meters.
 # All joint coordinates equal to zero must give the pictured configuration.
-dh = None
+dh = [
+    [np.pi/2, 4.0, 0.0, np.pi/2],
+    [np.pi/6, 0.0, 0.0, np.pi/2],
+    [0.0,     4.0, 0.0, np.pi/2],
+    [np.pi/6, 0.0, 2.0, np.pi/2],
+]
 
 if dh is None:
     raise NotImplementedError(

@@ -1,0 +1,3 @@
+I believe the method works. It is a bigO n^4 or something like that so it takes forever to run. I
+went with a simple BFS as it is all that I felt I had time for. I’d like to have made something a
+little better and faster, as I know I could have.
